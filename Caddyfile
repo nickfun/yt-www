@@ -1,5 +1,5 @@
 
-localhost:2019 {
+localhost {
 	log ./logs/access.log
 	root .
 	internal /logs
