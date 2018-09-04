@@ -1,0 +1,10 @@
+#
+# configs
+#
+PYTHONUNBUFFERED=true
+APP_PORT=9898
+WEB_PORT=8080
+BEANSTALK_PORT=11300
+BEANSTALK_BINFOLDER=./binlogs
+# no trailing slash!
+DOWNLOAD_FOLDER=./videos

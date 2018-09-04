@@ -1,12 +1,12 @@
 
-localhost {
+localhost, {$CADDY_DOMAIN} {
 	log ./logs/access.log
 	root .
 	internal /logs
 	internal /binlogs
 	internal /templates
 	internal /venv
-	proxy / localhost:9898 {
+	proxy / localhost:{$APP_PORT} {
 		transparent
 		except /videos
 	}
