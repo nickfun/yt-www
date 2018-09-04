@@ -24,8 +24,12 @@ print("Connected to beanstalk")
 def getVideoList():
 	videos = []
 	for fn in os.listdir(DOWNLOAD_FOLDER):
-		if fn.endswith(".mp4"):
-			name = fn[0:-4]
+		parts = fn.split(".")
+		i = len(parts)-1
+		ext = parts[i]
+		if ext in ['mp4', 'mkv', 'webm']:
+			parts.pop()
+			name = ".".join(parts)
 			url = DOWNLOAD_FOLDER + '/' + fn
 			size = os.path.getsize(DOWNLOAD_FOLDER + "/" + fn)
 			videos.append({
