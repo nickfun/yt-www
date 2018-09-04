@@ -1,0 +1,5 @@
+.env
+venv/
+binlogs/
+videos
+logs

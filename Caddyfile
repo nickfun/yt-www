@@ -1,0 +1,14 @@
+
+localhost:2019 {
+	log ./logs/access.log
+	root .
+	internal /logs
+	internal /binlogs
+	internal /templates
+	internal /venv
+	proxy / localhost:9898 {
+		transparent
+		except /videos
+	}
+	browse /videos
+}
