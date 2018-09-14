@@ -74,11 +74,13 @@
               {% for video in data.video_list %}
                 <tr>
                   <td>
-                    <a href="{{ video.url }}">{{ video.name }}</a>
+                    <div class="video-link"><a href="{{ video.url }}">{{ video.name }}</a></div>
+                    <div class="d-none video-description"></div>
                   </td>
                   <td>{{ video.size }}</td>
                   <td class="td-action-delete">
-                    <button type="button" class="btn btn-danger" role="action-delete" vid="{{ video.id }}">Delete</button>
+                    <button type="button" class="btn btn-secondary" role="action-description" vid="{{ video.id }}">Description</button>
+                    <button type="button" class="btn btn-secondary" role="action-delete" vid="{{ video.id }}">Delete</button>
                   </td>
                 </tr>
               {% endfor %}
@@ -94,7 +96,51 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
      -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="/app.js?nocache={{ data.rand_str }}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+console.log('hello world');
+$(function() {
+
+  $(document.body).on('click', '[role=action-delete]', function(e) {
+    console.log("Got a click to delete")
+    var id = $(e.target).attr('vid');
+    console.log("Video: " + id);
+    addConfirmButton($(e.target));
+  });
+
+  $(document.body).on('click', '[role=action-description]', function(e) {
+    var id = $(e.target).attr('vid');
+    var $tr = $(e.target).parentsUntil('tr').parent();
+    var $div = $tr.find('div.video-description');
+    if ($div.text().length > 1) {
+      $div.text('');
+      $div.removeClass('d-block');
+      $div.addClass('d-none');
+    } else {
+      showDescription(id, $div);
+    }
+  });
+
+  $(document.body).on('click', '[role=action-confirm-delete]', function(e) {
+    console.log("IT WAS REALLY DELETED!");
+  });
+
+  function addConfirmButton($target) {
+    var $p = $target.parent();
+    var $b = $('<button type="button" class="btn btn-danger" role="action-confirm-delete">Really Delete</button>');
+    $p.append($b);
+  }
+
+  function showDescription(id, $target) {
+    url = '/videos/' + id + '.description';
+    $.get(url, function(result) {
+      $target.text(result);
+      $target.removeClass('d-none');
+      $target.addClass('d-block');
+    })
+  }
+
+});
+    </script>
 </body>
 </html>
