@@ -4,6 +4,9 @@ import math
 import json
 from flask import Flask, render_template, request
 import greenstalk
+import string
+import random
+
 
 APP_PORT = int(os.environ.get('APP_PORT', -1))
 BEANSTALK_PORT = int(os.environ.get('BEANSTALK_PORT', -1))
@@ -29,12 +32,13 @@ def getVideoList():
 		ext = parts[i]
 		if ext in ['mp4', 'mkv', 'webm']:
 			parts.pop()
-			name = ".".join(parts)
+			v_id = ".".join(parts)
 			url = DOWNLOAD_FOLDER + '/' + fn
 			size = os.path.getsize(DOWNLOAD_FOLDER + "/" + fn)
 			videos.append({
 				"url": url,
-				"name": name,
+				"name": v_id,
+				"id": v_id,
 				"size": math.floor(size / 1024 / 1024),
 			})
 	return videos
@@ -48,6 +52,10 @@ def submitUrl(url):
 	print("inserting: " + body)
 	queue.put(body)
 
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+	return ''.join(random.choice(chars) for _ in range(size))
+
 app = Flask(__name__)
 
 @app.route("/", methods=['GET'])
@@ -55,7 +63,8 @@ def index(msg = False):
 	print("Message is " + str(msg))
 	template_data = {
 		"message": msg,
-		"video_list": getVideoList()
+		"video_list": getVideoList(),
+		"rand_str": id_generator(),
 	}
 	return render_template('index.html', data=template_data)
 

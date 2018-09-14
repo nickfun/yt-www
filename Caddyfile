@@ -9,6 +9,7 @@ localhost, {$CADDY_DOMAIN} {
 	proxy / localhost:{$APP_PORT} {
 		transparent
 		except /videos
+		except /app.js
 	}
 	browse /videos
 }
